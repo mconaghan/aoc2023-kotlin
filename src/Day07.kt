@@ -3,41 +3,55 @@ fun main() {
     fun part1(input: List<String>): Long {
         val hands = input.map {
             val tokens = it.split(" ")
-            Hand(tokens[0], tokens[1].toInt())
+            Hand(tokens[0], tokens[1].toLong())
         }
         val sorted = hands.sortedWith(
             compareBy(
-                { it.getRank() },
-                { it.getCard1() },
-                { it.getCard2() },
-                { it.getCard3() },
-                { it.getCard4() },
-                { it.getCard5() })
+                { it.getRankPartOne() },
+                { it.getCard1(true) },
+                { it.getCard2(true) },
+                { it.getCard3(true) },
+                { it.getCard4(true) },
+                { it.getCard5(true) })
         )
-
-        println(sorted)
 
         var total = 0L
         sorted.forEachIndexed { index, hand ->
             total += ((index + 1) * hand.bid)
-            val rank = hand.getRank()
-            println("Total is now $total (${index + 1} x ${hand.bid}) - $hand $rank")
         }
         return total
     }
 
     fun part2(input: List<String>): Long {
-        return 0L
+        val hands = input.map {
+            val tokens = it.split(" ")
+            Hand(tokens[0], tokens[1].toLong())
+        }
+
+        val sorted = hands.sortedWith(
+            compareBy(
+                { it.getRankPartTwo() },
+                { it.getCard1(false) },
+                { it.getCard2(false) },
+                { it.getCard3(false) },
+                { it.getCard4(false) },
+                { it.getCard5(false) })
+        )
+
+        var total = 0L
+        sorted.forEachIndexed { index, hand ->
+            total += ((index + 1) * hand.bid)
+        }
+        return total
     }
 
     val testInput = readInput("Day07_test")
     check(part1(testInput) == 6440L)
-
-    check(part2(testInput) == 0L)
+    check(part2(testInput) == 5905L)
 
     val input = readInput("Day07")
-    print("Part one answer is ") // NOT 255125074 | 255027346 is too low |
+    print("Part one answer is ") // ?
     part1(input).println()
-    print("Part two answer is ") // ?
+    print("Part two answer is ")
     part2(input).println()
 }
